@@ -210,6 +210,13 @@ It combines database design, backend development, API integration, and frontend 
 - Exportable reports
 - Improved order tracking
 
+## Author
+
+**Joshua D'Souza**
+
+Computer Science & Engineering Student
+
+GitHub: [@joshdoshboi](https://github.com/joshdoshboi)
 
 ---
 
