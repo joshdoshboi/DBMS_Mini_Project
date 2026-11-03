@@ -1,0 +1,10 @@
+CREATE TABLE categories(category_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, category_name VARCHAR(100) NOT NULL UNIQUE);
+CREATE TABLE suppliers(supplier_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, supplier_name VARCHAR(150) NOT NULL, email VARCHAR(150) UNIQUE, phone VARCHAR(20));
+CREATE TABLE products(product_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, product_name VARCHAR(150) NOT NULL, category_id INTEGER NOT NULL REFERENCES categories(category_id) ON DELETE RESTRICT, supplier_id INTEGER NOT NULL REFERENCES suppliers(supplier_id) ON DELETE RESTRICT, price NUMERIC(10,2) NOT NULL CHECK(price>=0), stock_quantity INTEGER NOT NULL DEFAULT 0 CHECK(stock_quantity>=0), reorder_level INTEGER NOT NULL DEFAULT 10 CHECK(reorder_level>=0), is_active BOOLEAN NOT NULL DEFAULT TRUE);
+CREATE TABLE customers(customer_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, customer_name VARCHAR(150) NOT NULL, email VARCHAR(150) UNIQUE, phone VARCHAR(20));
+CREATE TABLE orders(order_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, customer_id INTEGER NOT NULL REFERENCES customers(customer_id) ON DELETE RESTRICT, order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, status VARCHAR(20) NOT NULL DEFAULT 'Pending' CHECK(status IN ('Pending','Confirmed','Shipped','Delivered','Cancelled')));
+CREATE TABLE order_items(order_item_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, order_id INTEGER NOT NULL REFERENCES orders(order_id) ON DELETE CASCADE, product_id INTEGER NOT NULL REFERENCES products(product_id) ON DELETE RESTRICT, quantity INTEGER NOT NULL CHECK(quantity>0), unit_price NUMERIC(10,2) NOT NULL CHECK(unit_price>=0), UNIQUE(order_id,product_id));
+CREATE INDEX idx_products_category ON products(category_id);
+CREATE INDEX idx_products_supplier ON products(supplier_id);
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+CREATE INDEX idx_order_items_product ON order_items(product_id);
